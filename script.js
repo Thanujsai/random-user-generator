@@ -19,15 +19,39 @@ console.log('hi')
 
 // console.log(`title is ${title}`)
 
+function displayUser(gender) {
+    if (gender === 'female') {
+      document.body.style.backgroundColor = 'rebeccapurple';
+    } else {
+      document.body.style.backgroundColor = 'steelblue';
+    }
+}
+
 function onClick() {
     console.log('clicked');
-
+    showSpinner();
     fetch('https://randomuser.me/api')
         .then((response) => response.json())
-        .then((data) => console.log(data))
+        .then((data) => {
+            hideSpinner();
+            console.log('data is')
+            console.log(data.results[0]);
+            // displayUser(data.results[0]);
+            console.log(data)
+        })
     
     var userPromise = fetch('https://randomuser.me/api')
                         .then((response) => response.json());
+
+    userPromise.then((data) => {
+        var gender = data.results[0].gender;
+        displayUser(gender); // Move displayUser inside this block
+        console.log(`gender is ${gender}`)
+    });
+    var gender = userPromise.then((data) => data.results[0].gender);
+    console.log(`gender is ${gender}`)
+    var gender1 = userPromise.then((data) => console.log(data.results[0].gender));
+    displayUser(gender);
 
     console.log(userPromise)
     var userNamePromise = userPromise.then((data) => data.results[0].name);
@@ -72,4 +96,12 @@ function onClick() {
 }
 const button = document.querySelector('#generate');
 
-button.addEventListener('click',onClick)
+button.addEventListener('click',onClick);
+
+function hideSpinner() {
+    document.querySelector('.spinner').style.display = 'none';
+  }
+
+  function showSpinner() {
+    document.querySelector('.spinner').style.display = 'block';
+  }
